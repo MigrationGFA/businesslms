@@ -1,9 +1,7 @@
 import Navbar from "../componenets/Navbar";
 
 const LandingPage = () => {
-  return (
-    <Navbar/>
-  );
+  return <Navbar />;
 };
 
-export default LandingPage
+export default LandingPage;
