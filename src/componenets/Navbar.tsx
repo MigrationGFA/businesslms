@@ -1,95 +1,111 @@
-
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import Logo from "../assets/RemsanaLogoBlue.webp";
 
 const Navbar = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  };
-
-  const floatingVariants = {
-    initial: { y: 0 },
-    animate: {
-      y: [-20, 20, -20],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-      },
-    },
-  };
+  const navItems = ["Program", "Contact", "About Us"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex flex-col">
-      <motion.div
-        className="flex-1 flex items-center justify-center px-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="text-center max-w-2xl">
-          {/* Animated Heading */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-6xl md:text-7xl font-bold text-white mb-6"
-          >
-            Under Construction
-          </motion.h1>
-
-          {/* Animated Subheading */}
-          <motion.p
-            variants={itemVariants}
-            className="text-xl md:text-2xl text-blue-100 mb-8"
-          >
-            We're working on something amazing!
-          </motion.p>
-
-          {/* Animated Description */}
-          <motion.p
-            variants={itemVariants}
-            className="text-lg text-blue-50 mb-12 leading-relaxed"
-          >
-            Our platform is being redesigned to bring you an even better learning experience. Check back soon!
-          </motion.p>
-
-          {/* Animated Button */}
-          <motion.button
-            variants={itemVariants}
+    <div className="relative max-w-7xl w-4xl mx-auto px-4 sm:px-6">
+      <div className="bg-white py-2 px-4 rounded-full z-20 relative">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <motion.div
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+            className="text-5xl shrink-0"
           >
-            Notify Me
-          </motion.button>
+            <img src={Logo} alt="Remsana Logo" className="h-7 sm:h-8" />
+          </motion.div>
 
-          {/* Animated Floating Elements */}
-          <div className="mt-16 flex justify-center gap-8">
-            {[1, 2, 3].map((item) => (
-              <motion.div
+          {/* Desktop Menu */}
+          <div className="hidden md:flex gap-6 lg:gap-8">
+            {navItems.map((item, index) => (
+              <motion.a
                 key={item}
-                variants={floatingVariants}
-                initial="initial"
-                animate="animate"
-                className="w-12 h-12 bg-white bg-opacity-20 rounded-full"
-              />
+                href={`#${item.toLowerCase()}`}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                className="text-black text-sm hover:text-blue-600 transition whitespace-nowrap"
+              >
+                {item}
+              </motion.a>
             ))}
           </div>
+
+          {/* Desktop CTA */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="hidden md:block bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 shrink-0"
+          >
+            Apply Now →
+          </motion.button>
+
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden relative w-8 h-8 flex flex-col justify-center items-center"
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              animate={{
+                rotate: isOpen ? 45 : 0,
+                y: isOpen ? 6 : 0,
+              }}
+              className="absolute w-6 h-0.5 bg-gray-700"
+            />
+            <motion.span
+              animate={{
+                opacity: isOpen ? 0 : 1,
+              }}
+              className="absolute w-6 h-0.5 bg-gray-700"
+            />
+            <motion.span
+              animate={{
+                rotate: isOpen ? -45 : 0,
+                y: isOpen ? -6 : 0,
+              }}
+              className="absolute w-6 h-0.5 bg-gray-700"
+            />
+          </button>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Mobile Dropdown */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25 }}
+            className="md:hidden absolute left-0 right-0 mt-3 bg-white rounded-3xl shadow-lg p-6 z-10"
+          >
+            <div className="flex flex-col gap-5">
+              {navItems.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="text-gray-700 font-medium hover:text-blue-600 text-center"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item}
+                </a>
+              ))}
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700 w-full"
+              >
+                Apply Now →
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
