@@ -1,153 +1,71 @@
-import { useState, } from "react";
-import axios from "axios";
+import { type FC } from "react";
 
-const Footer = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    companyEmail: "",
-    companyName: "",
-    jobTitle: "",
-  });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-
-  const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus("submitting");
-
-    try {
-      const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
-
-      await axios.post(endpoint, formData, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      setStatus("success");
-      setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
-    } catch (error) {
-      console.error(error);
-      setStatus("error");
-    }
-  };
-
+const Footer: FC = () => {
   return (
     <>
+      {/* CTA Section */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 lg:px-20 py-16 sm:py-24"
-        style={{
-          background: "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
-        }}
+        className="relative overflow-hidden px-6 sm:px-10 lg:px-20 py-16 sm:py-24 bg-gradient-to-br from-[#020A15] via-[#051833] to-[#01070F]"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left: heading + stats */}
-          <div>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl text-white leading-tight">
-              Ready to use AI to <span className="italic text-blue-400">Grow</span> your Business?
-            </h2>
-            <p className="text-gray-300 text-sm sm:text-base mt-6 max-w-lg">
-              Join an elite cohort of founders and business owners for the next 100-day
-              transformation program. Seats are limited by invitation and application review.
+        {/* Ambient background glow */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto flex flex-col items-start text-left">
+          {/* Subtitle */}
+          <p className="text-sm sm:text-base font-normal text-blue-400 uppercase tracking-wider mb-4">
+            Our Journey
+          </p>
+
+          {/* Heading */}
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl text-white font-normal leading-tight max-w-4xl mb-6">
+            A battle-tested execution engine behind Africa’s most visible digitization programs.
+          </h2>
+
+          {/* Paragraph */}
+          <p className="text-gray-300 text-sm sm:text-base lg:text-lg max-w-2xl mb-10 leading-relaxed font-light">
+            Our underlying proprietary software architecture has powered public, private, and state-level transformation programs at scale.
+          </p>
+
+          {/* Card */}
+          <div className="bg-[#EBF3FE] rounded-[24px] p-6 sm:p-8 lg:p-10 w-full max-w-md shadow-xl shadow-black/25 border border-blue-200/15">
+            <h3 className="text-2xl sm:text-3xl font-bold text-[#0053D0] mb-2 tracking-tight">
+              Learn
+            </h3>
+            <p className="text-gray-600 text-xs sm:text-sm font-normal mb-6 leading-relaxed">
+              Business Audit, AI Strategy, Diagnostics, Roadmap.
             </p>
 
-            <div className="mt-8 inline-flex flex-col sm:flex-row bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
-              <div className="px-6 py-4 border-b sm:border-b-0 sm:border-r border-white/10">
-                <p className="text-white font-semibold">28 Days</p>
-                <p className="text-gray-300 text-xs mt-1">Total Commitment</p>
-              </div>
-              <div className="px-6 py-4">
-                <p className="text-white font-semibold">Blended Learning</p>
-                <p className="text-gray-300 text-xs mt-1">Executive Cohort</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: form panel */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-8">
-            <h3 className="text-white text-lg font-medium mb-6">Application Form</h3>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="fullName" className="block text-sm text-white/80 mb-2">
-                  Full Name
-                </label>
-                <input
-                  id="fullName"
-                  type="text"
-                  required
-                  value={formData.fullName}
-                  onChange={handleChange("fullName")}
-                  placeholder="Emmanuel Kelvin"
-                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="companyEmail" className="block text-sm text-white/80 mb-2">
-                  Company Email
-                </label>
-                <input
-                  id="companyEmail"
-                  type="email"
-                  required
-                  value={formData.companyEmail}
-                  onChange={handleChange("companyEmail")}
-                  placeholder="emmanuel@company.com"
-                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="companyName" className="block text-sm text-white/80 mb-2">
-                  Company Name
-                </label>
-                <input
-                  id="companyName"
-                  type="text"
-                  required
-                  value={formData.companyName}
-                  onChange={handleChange("companyName")}
-                  placeholder="Acme Holding"
-                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="jobTitle" className="block text-sm text-white/80 mb-2">
-                  Job Title
-                </label>
-                <input
-                  id="jobTitle"
-                  type="text"
-                  required
-                  value={formData.jobTitle}
-                  onChange={handleChange("jobTitle")}
-                  placeholder="Chief Executive Officer"
-                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 rounded-full transition"
-              >
-                {status === "submitting" ? "Submitting..." : "Submit Application →"}
-              </button>
-
-              {status === "success" && (
-                <p className="text-green-400 text-sm text-center">
-                  Application submitted successfully!
-                </p>
-              )}
-              {status === "error" && (
-                <p className="text-red-400 text-sm text-center">
-                  Something went wrong. Please try again.
-                </p>
-              )}
-            </form>
+            {/* Checklist */}
+            <ul className="space-y-4">
+              {[
+                "AI Strategy",
+                "Business Diagnostics",
+                "AI Roadmap",
+                "Department Transformation Plan",
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-center gap-3">
+                  <div className="text-[#0053D0] shrink-0">
+                    {/* Blue checkmark SVG */}
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-gray-800 font-medium tracking-wide">
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
