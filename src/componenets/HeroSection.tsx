@@ -4,7 +4,15 @@ import Professional from "../assets/Professional.webp";
 import Navbar from "../componenets/Navbar";
 import Line from "../assets/VectorImage.svg";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  onOpenBrochureModal: () => void;
+  onOpenApplicationModal: () => void;
+}
+
+const HeroSection = ({
+  onOpenBrochureModal,
+  onOpenApplicationModal,
+}: HeroSectionProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -15,31 +23,47 @@ const HeroSection = () => {
     if (img.complete) setImageLoaded(true);
   }, []);
 
-  const badgeVariants : Variants = {
+  const badgeVariants: Variants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
-  const headingVariants : Variants = {
+  const headingVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.15, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, delay: 0.15, ease: "easeOut" },
+    },
   };
 
-  const descriptionVariants : Variants = {
+  const descriptionVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.3, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, delay: 0.3, ease: "easeOut" },
+    },
   };
 
-  const buttonsVariants : Variants = {
+  const buttonsVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.45, ease: "easeOut" } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, delay: 0.45, ease: "easeOut" },
+    },
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden pt-14 pb-20 md:pb-0">
+    <section className="relative min-h-screen  overflow-hidden pt-14 pb-20 md:pb-[0px]">
       {/* Background image, fades in once loaded */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center md:bg-down"
+        className="absolute inset-0 bg-cover bg-center md:bg-"
         style={{ backgroundImage: `url(${Professional})` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: imageLoaded ? 1 : 0 }}
@@ -55,15 +79,20 @@ const HeroSection = () => {
       />
 
       <div className="relative z-20">
-        <Navbar />
+        <Navbar onOpenApplicationModal={onOpenApplicationModal} />
       </div>
 
-      <img src={Line} alt="" aria-hidden="true" className="absolute top-16 left-0 w-full" />
+      <img
+        src={Line}
+        alt=""
+        aria-hidden="true"
+        className="absolute top-16 left-0 w-full"
+      />
 
       {/* Content - only animates once the image has loaded */}
       <AnimatePresence>
         {imageLoaded && (
-          <div className="relative z-10 max-w-6xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center pt-8">
+          <div className="relative z-10 max-w-6xl mx-auto px-6 h-full flex flex-col items-center justify-center text-center pt-8 " >
             <motion.div
               variants={badgeVariants}
               initial="hidden"
@@ -82,7 +111,9 @@ const HeroSection = () => {
               className="text-4xl lg:px-40 md:text-3xl lg:text-6xl font-medium text-white mb-6 mt-20"
             >
               Build an{" "}
-              <span className="bg-blue-600 text-white">AI-Powered Business</span>{" "}
+              <span className="bg-blue-600 text-white">
+                AI-Powered Business
+              </span>{" "}
               That Runs Without You.
             </motion.h1>
 
@@ -93,8 +124,8 @@ const HeroSection = () => {
               className="text-sm md:text-lg text-gray-200 mb-8 max-w-2xl"
             >
               A 100-day executive learning program equipping Founders, CEOs, and
-              Business Owners to strategically deploy AI across operations, finance,
-              and marketing.
+              Business Owners to strategically deploy AI across operations,
+              finance, and marketing.
             </motion.p>
 
             <motion.div
@@ -106,6 +137,7 @@ const HeroSection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={onOpenApplicationModal}
                 className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
               >
                 Apply for a seat →
@@ -114,6 +146,7 @@ const HeroSection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={onOpenBrochureModal}
                 className="px-8 py-3 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition"
               >
                 Download Brochure

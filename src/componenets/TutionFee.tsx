@@ -1,4 +1,8 @@
-const TutionFee = () => {
+interface TutionFeeProps {
+  onOpenApplicationModal: () => void;
+}
+
+const TutionFee = ({ onOpenApplicationModal }: TutionFeeProps) => {
   const includes = [
     "100-Day Program Access",
     "2-Day Physical Residency",
@@ -62,7 +66,10 @@ const TutionFee = () => {
             </div>
           </div>
 
-          <button className="mt-6 w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-sm font-medium transition">
+          <button
+            onClick={onOpenApplicationModal}
+            className="mt-6 w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-sm font-medium transition"
+          >
             Apply for a seat →
           </button>
         </div>

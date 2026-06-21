@@ -3,7 +3,11 @@ import { useState } from "react";
 import Logo from "../assets/RemsanaLogoBlue.webp";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+interface NavbarProps {
+  onOpenApplicationModal: () => void;
+}
+
+const Navbar = ({ onOpenApplicationModal }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -60,6 +64,7 @@ const Navbar = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={onOpenApplicationModal}
             className="hidden md:block bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 shrink-0"
           >
             Apply Now →
@@ -101,6 +106,7 @@ const Navbar = () => {
                   >
                     <Link
                       to={item.href}
+                      onClick={() => setIsOpen(false)}
                       className="text-black text-sm hover:text-blue-600 transition whitespace-nowrap"
                     >
                       {item.label}
@@ -110,6 +116,7 @@ const Navbar = () => {
                   <motion.a
                     key={item.label}
                     href={item.href}
+                    onClick={() => setIsOpen(false)}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.2 }}
@@ -122,6 +129,10 @@ const Navbar = () => {
 
               <motion.button
                 whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setIsOpen(false);
+                  onOpenApplicationModal();
+                }}
                 className="bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700 w-full"
               >
                 Apply Now →
