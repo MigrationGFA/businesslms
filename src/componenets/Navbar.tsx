@@ -8,7 +8,7 @@ const Navbar = () => {
   const navItems = ["Program", "Contact", "About Us"];
 
   return (
-    <div className="relative max-w-7xl w-4xl mx-auto px-4 sm:px-6">
+    <div className="relative max-w-7xl  w-full   md:w-4xl mx-auto px-4 sm:px-6  overflow-hidden">
       <div className="bg-white py-2 px-4 rounded-full z-20 relative">
         <div className="flex justify-between items-center">
           {/* Logo */}

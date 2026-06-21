@@ -12,11 +12,11 @@ const ProgramStr = () => {
         {/* Cards grid */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-5">
           {/* Program Date - column 1, spans both rows */}
-          <div className="md:col-start-1 md:row-start-1 md:row-span-2 bg-[#BFD7FF] rounded-2xl p-6 sm:p-8 flex flex-col justify-center">
+          <div className="md:col-start-1 md:row-start-1 md:row-span-2 bg-[#BFD7FF] rounded-2xl p-6 sm:p-8 flex flex-col ">
             <h3 className="text-xl sm:text-2xl font-bold text-[#0B3FD9]">
               Program Date
             </h3>
-            <div className="w-12 h-1 bg-[#0B3FD9] mt-3 mb-6 rounded-full" />
+            <div className="w-14 h-4 bg-[#0B3FD9] mt-2 mb-6 " />
             <p className="text-xl sm:text-2xl leading-snug">
               August 3rd - September 30th 2027
             </p>
