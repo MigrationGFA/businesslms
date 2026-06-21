@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import AboutBg from "../assets/aboutimage.webp";
 import Navbar from "./Navbar";
 
-const AboutHero = () => {
+interface AboutHeroProps {
+  onOpenApplicationModal: () => void;
+}
+
+const AboutHero = ({ onOpenApplicationModal }: AboutHeroProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -50,7 +54,7 @@ const AboutHero = () => {
 
       {/* Navbar overlay */}
       <div className="relative z-20">
-        <Navbar />
+        <Navbar onOpenApplicationModal={onOpenApplicationModal} />
       </div>
 
       {/* Content - only animates once image loads */}

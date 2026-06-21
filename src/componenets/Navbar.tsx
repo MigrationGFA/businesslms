@@ -11,8 +11,8 @@ const Navbar = ({ onOpenApplicationModal }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { label: "Program", href: "#program", isRoute: false },
-    { label: "Contact", href: "#contact", isRoute: false },
+    { label: "Program", href: "/#program", isRoute: false },
+    { label: "Contact", href: "/#contact", isRoute: false },
     { label: "About Us", href: "/about", isRoute: true },
   ];
 
@@ -25,7 +25,9 @@ const Navbar = ({ onOpenApplicationModal }: NavbarProps) => {
             whileHover={{ scale: 1.05 }}
             className="text-5xl shrink-0"
           >
-            <img src={Logo} alt="Remsana Logo" className="h-7 sm:h-8" />
+            <Link to="/">
+              <img src={Logo} alt="Remsana Logo" className="h-7 sm:h-8" />
+            </Link>
           </motion.div>
 
           {/* Desktop Menu */}
