@@ -36,7 +36,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden pt-14">
+    <section className="relative min-h-screen overflow-hidden pt-14 pb-20 md:pb-0">
       {/* Background image, fades in once loaded */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center md:bg-down"
@@ -79,7 +79,7 @@ const HeroSection = () => {
               variants={headingVariants}
               initial="hidden"
               animate="visible"
-              className="text-2xl lg:px-40 md:text-3xl lg:text-6xl font-medium text-white mb-6 mt-20"
+              className="text-4xl lg:px-40 md:text-3xl lg:text-6xl font-medium text-white mb-6 mt-20"
             >
               Build an{" "}
               <span className="bg-blue-600 text-white">AI-Powered Business</span>{" "}
@@ -90,7 +90,7 @@ const HeroSection = () => {
               variants={descriptionVariants}
               initial="hidden"
               animate="visible"
-              className="text-lg md:text-lg text-gray-200 mb-8 max-w-2xl"
+              className="text-sm md:text-lg text-gray-200 mb-8 max-w-2xl"
             >
               A 100-day executive learning program equipping Founders, CEOs, and
               Business Owners to strategically deploy AI across operations, finance,

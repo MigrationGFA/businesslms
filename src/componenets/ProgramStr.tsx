@@ -1,6 +1,6 @@
 const ProgramStr = () => {
   return (
-    <section className="bg-[#F0F6FF] text-[#191A15] px-6 sm:px-10 lg:px-20">
+    <section className="bg-[#F0F6FF] text-[#191A15] px-6 sm:px-10 lg:px-20" id="program">
       <div className="py-12 sm:py-16 lg:py-20">
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-light">
           Program Structure
