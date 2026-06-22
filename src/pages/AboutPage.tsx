@@ -2,7 +2,7 @@ import { useState } from "react";
 import AboutHero from "../componenets/AboutHero";
 import OurJourney from "../componenets/OurJourney";
 import RemsanaDifference from "../componenets/RemsanaDifference";
-import Footer from "../componenets/Footer";
+import AboutFooter from "../componenets/AboutFooter";
 import ApplicationModal from "../componenets/ApplicationModal";
 
 const AboutPage = () => {
@@ -24,7 +24,7 @@ const AboutPage = () => {
       </div>
 
       {/* Footer */}
-      <Footer />
+      <AboutFooter />
     </div>
   );
 };
