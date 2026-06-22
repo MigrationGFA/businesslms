@@ -16,6 +16,7 @@ const AboutPage = () => {
       />
       <div>
         {/* Sections */}
+           {/* Sections */}
         <main>
           <AboutHero onOpenApplicationModal={() => setIsApplicationModalOpen(true)} />
           <OurJourney />
@@ -25,6 +26,7 @@ const AboutPage = () => {
 
       {/* Footer */}
       <AboutFooter />
+
     </div>
   );
 };
