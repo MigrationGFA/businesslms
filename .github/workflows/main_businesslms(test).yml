@@ -24,9 +24,6 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
-        env:
-          VITE_APPLICATION_FORM_ENDPOINT: ${{ secrets.VITE_APPLICATION_FORM_ENDPOINT }}
-          VITE_BROCHURE_ENDPOINT: ${{ secrets.VITE_BROCHURE_ENDPOINT }}
         run: |
           npm install
           npm run build --if-present
@@ -36,18 +33,28 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: dist
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app
       
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F4F338C0F6324DA7A8DBA26F4AF86F9C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_188269E6894B45EB9420D7277C7629D1 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8216F36FE81246F3B763A1C90BF1BDEA }}
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -55,4 +62,4 @@ jobs:
           app-name: 'businesslms'
           slot-name: 'test'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EEA55520E3AF449F875A4AE2F73B2DDD }}
+          
