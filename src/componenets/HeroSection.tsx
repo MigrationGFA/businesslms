@@ -60,7 +60,7 @@ const HeroSection = ({
   };
 
   return (
-    <section className="relative min-h-screen  overflow-hidden pt-14 pb-20 md:pb-[0px]">
+    <section className="relative min-h-screen  overflow-hidden pt-14 pb-20 ">
       {/* Background image, fades in once loaded */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center md:bg-"

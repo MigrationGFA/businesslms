@@ -15,6 +15,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     jobTitle: "",
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleChange =
     (field: keyof typeof formData) =>
@@ -25,6 +26,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
+    setResponseMessage("");
     console.log("Submitting application form with data:", formData);
     try {
       const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
@@ -39,10 +41,20 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         headers: { "Content-Type": "application/json" },
       });
       console.log("Application response:", response.data);
+      
+      const data = response.data;
+      const msg = typeof data === 'string' ? data : (data?.messages?.success || data?.message || "Application submitted successfully!");
+      setResponseMessage(msg);
       setStatus("success");
       setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Error response data:", error.response?.data);
       console.error("Error submitting application:", error);
+      const data = error.response?.data;
+      const msg = typeof data === 'string' 
+        ? data 
+        : (data?.messages?.error || data?.messages?.message || data?.message || data?.error || "Something went wrong. Please try again.");
+      setResponseMessage(msg);
       setStatus("error");
     }
   };
@@ -51,6 +63,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     onClose();
     setTimeout(() => {
       setStatus("idle");
+      setResponseMessage("");
       setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
     }, 300);
   };
@@ -129,7 +142,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
               </div>
 
               <AnimatePresence mode="wait">
-                {status !== "success" ? (
+                {status === "idle" || status === "submitting" ? (
                   <motion.div
                     key="app-form-state"
                     initial={{ opacity: 0 }}
@@ -250,25 +263,12 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           "Submit Application →"
                         )}
                       </motion.button>
-
-                      <AnimatePresence>
-                        {status === "error" && (
-                          <motion.p
-                            initial={{ opacity: 0, y: -4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -4 }}
-                            className="text-red-400 text-sm text-center"
-                          >
-                            Something went wrong. Please try again.
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
                     </form>
                   </motion.div>
                 ) : (
-                  /* ── Success state ── */
+                  /* ── Result state (Success/Error) ── */
                   <motion.div
-                    key="app-success-state"
+                    key="app-result-state"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
@@ -283,35 +283,39 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                         damping: 20,
                         delay: 0.1,
                       }}
-                      className="w-16 h-16 rounded-full bg-green-500/15 border border-green-500/30 flex items-center justify-center mx-auto mb-5"
+                      className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 ${
+                        status === "success" 
+                          ? "bg-green-500/15 border border-green-500/30" 
+                          : "bg-red-500/15 border border-red-500/30"
+                      }`}
                     >
-                      <svg
-                        width="28"
-                        height="28"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#4ade80"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+                      {status === "success" ? (
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      ) : (
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                      )}
                     </motion.div>
 
                     <h3 className="text-2xl text-white font-medium mb-2">
-                      Application Received!
+                      {status === "success" ? "Success!" : "Notice"}
                     </h3>
                     <p className="text-gray-300 text-sm mb-8 leading-relaxed">
-                      Thank you for applying. Our team will review your application
-                      and reach out to you shortly.
+                      {responseMessage}
                     </p>
 
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={handleClose}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-10 py-3 rounded-full transition-colors"
+                      className={`font-medium px-10 py-3 rounded-full transition-colors ${
+                        status === "success" 
+                          ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                          : "bg-red-600 hover:bg-red-700 text-white"
+                      }`}
                     >
                       Done
                     </motion.button>

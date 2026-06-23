@@ -1,5 +1,6 @@
 import { useState, type FC } from "react";
 import axios from "axios";
+import ResultModal from "./ResultModal";
 
 const Footer: FC = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const Footer: FC = () => {
     jobTitle: "",
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
   const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -17,6 +20,7 @@ const Footer: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
+    setResponseMessage("");
 
     try {
       const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
@@ -27,15 +31,27 @@ const Footer: FC = () => {
         job_title: formData.jobTitle
       };
 
-      await axios.post(endpoint, payload, {
+      const response = await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
+      console.log("Application response:", response.data);
 
+      const data = response.data;
+      const msg = typeof data === 'string' ? data : (data?.messages?.success || data?.message || "Application submitted successfully!");
+      setResponseMessage(msg);
       setStatus("success");
+      setIsResultModalOpen(true);
       setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Error response data:", error.response?.data);
       console.error(error);
+      const data = error.response?.data;
+      const msg = typeof data === 'string' 
+        ? data 
+        : (data?.messages?.error || data?.messages?.message || data?.message || data?.error || "Something went wrong. Please try again.");
+      setResponseMessage(msg);
       setStatus("error");
+      setIsResultModalOpen(true);
     }
   };
 
@@ -111,6 +127,16 @@ const Footer: FC = () => {
           </div>
         </div>
       </footer>
+
+      <ResultModal
+        isOpen={isResultModalOpen}
+        status={status as "success" | "error"}
+        message={responseMessage}
+        onClose={() => {
+          setIsResultModalOpen(false);
+          setStatus("idle");
+        }}
+      />
     </>
   );
 };
