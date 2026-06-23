@@ -24,9 +24,6 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
-        env:
-          VITE_APPLICATION_FORM_ENDPOINT: ${{ secrets.VITE_APPLICATION_FORM_ENDPOINT }}
-          VITE_BROCHURE_ENDPOINT: ${{ secrets.VITE_BROCHURE_ENDPOINT }}
         run: |
           npm install
           npm run build --if-present
@@ -36,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: dist
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,4 +52,4 @@ jobs:
           app-name: 'businesslms'
           slot-name: 'test'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EEA55520E3AF449F875A4AE2F73B2DDD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2321288C929E4E47A2AAAA662E22E884 }}
