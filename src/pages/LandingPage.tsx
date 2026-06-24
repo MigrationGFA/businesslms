@@ -29,7 +29,6 @@ const LandingPage = () => {
       <HeroSection
         onOpenBrochureModal={() => setIsBrochureModalOpen(true)}
         onOpenApplicationModal={() => {
-          console.log("Apply clicked from somewhere, opening modal");
           setIsApplicationModalOpen(true);
         }}
       />
