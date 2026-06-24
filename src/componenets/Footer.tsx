@@ -117,10 +117,27 @@ const Footer: FC = () => {
       </section>
 
       {/* Footer bar */}
-      <footer className="bg-[#0A0F1C] border-t border-blue-500/30 px-6 sm:px-10 lg:px-20 py-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center max-w-7xl mx-auto gap-4 text-sm text-gray-400">
-          <p>© 2026 Remsana. Copyright and rights reserved</p>
-          <div className="flex gap-2">
+      <footer className="bg-[#0A0F1C] border-t border-blue-500/30 px-6 sm:px-10 lg:px-20 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-6 text-sm text-gray-400">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <p>© 2026 Remsana. Copyright and rights reserved.</p>
+            <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-1">
+              <a href="mailto:info@remsana.com" className="hover:text-white transition flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                info@remsana.com
+              </a>
+              <span className="hidden sm:inline">·</span>
+              <a href="tel:07070498994" className="hover:text-white transition flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                +2347070498994
+              </a>
+            </div>
+          </div>
+          <div className="flex gap-3">
             <a href="#" className="hover:text-white transition">Terms and Conditions</a>
             <span>·</span>
             <a href="#" className="hover:text-white transition">Privacy Policy</a>

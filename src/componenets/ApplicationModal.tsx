@@ -27,7 +27,6 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     e.preventDefault();
     setStatus("submitting");
     setResponseMessage("");
-    console.log("Submitting application form with data:", formData);
     try {
       const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
       const payload = {
@@ -36,20 +35,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         company_name: formData.companyName,
         job_title: formData.jobTitle
       };
-      console.log("Sending payload to endpoint:", endpoint, payload);
+
       const response = await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("Application response:", response.data);
-      
       const data = response.data;
       const msg = typeof data === 'string' ? data : (data?.messages?.success || data?.message || "Application submitted successfully!");
       setResponseMessage(msg);
       setStatus("success");
       setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
     } catch (error: any) {
-      console.error("Error response data:", error.response?.data);
-      console.error("Error submitting application:", error);
       const data = error.response?.data;
       const msg = typeof data === 'string' 
         ? data 

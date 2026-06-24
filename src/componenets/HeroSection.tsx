@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 import Professional from "../assets/Professional.webp";
 import Navbar from "../componenets/Navbar";
 import Line from "../assets/VectorImage.svg";
+import ReactGA from "react-ga4";
+  
 
+// props for brochure and apllictaion modal
 interface HeroSectionProps {
   onOpenBrochureModal: () => void;
   onOpenApplicationModal: () => void;
@@ -14,6 +17,27 @@ const HeroSection = ({
   onOpenApplicationModal,
 }: HeroSectionProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+
+const handleApplyClick = () => {
+  ReactGA.event({
+    category: "CTA",
+    action: "Apply For Seat Clicked",
+  });
+
+  onOpenApplicationModal();
+};
+
+
+const handleBrochureClick = () => {
+  ReactGA.event({
+    category: "CTA",
+    action: "Download Brochure Clicked",
+  });
+
+  onOpenBrochureModal();
+};
+
+
 
   useEffect(() => {
     const img = new Image();
@@ -79,7 +103,7 @@ const HeroSection = ({
       />
 
       <div className="relative z-20">
-        <Navbar onOpenApplicationModal={onOpenApplicationModal} />
+        <Navbar onOpenApplicationModal={handleApplyClick} />
       </div>
 
       <img
@@ -137,7 +161,7 @@ const HeroSection = ({
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={onOpenApplicationModal}
+                onClick={handleApplyClick}
                 className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
               >
                 Apply for a seat →
@@ -146,7 +170,7 @@ const HeroSection = ({
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={onOpenBrochureModal}
+                onClick={handleBrochureClick}
                 className="px-8 py-3 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition"
               >
                 Download Brochure
