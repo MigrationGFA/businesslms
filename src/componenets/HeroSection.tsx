@@ -19,20 +19,18 @@ const HeroSection = ({
   const [imageLoaded, setImageLoaded] = useState(false);
 
 const handleApplyClick = () => {
-  ReactGA.event({
-    category: "CTA",
-    action: "Apply For Seat Clicked",
-  });
+  console.log("Apply clicked");
+  
+ ReactGA.event("apply_for_seat_clicked");
 
   onOpenApplicationModal();
 };
 
 
 const handleBrochureClick = () => {
-  ReactGA.event({
-    category: "CTA",
-    action: "Download Brochure Clicked",
-  });
+
+  console.log("Brochure clicked");
+ ReactGA.event("download_brochure_clicked");
 
   onOpenBrochureModal();
 };
