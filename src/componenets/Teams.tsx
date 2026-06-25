@@ -1,30 +1,28 @@
-import TeamPhoto from "../assets/Professional.webp";
-
+import TeamOne from "../assets/MrDebo.webp"
+import TeamTwo from "../assets/TunjiOke.webp"
+import TeamThree from "../assets/MrSeun.webp"
+import TeamFour from "../assets/MrsElizabeth.webp"
 const Teams = () => {
   const members = [
     {
-      name: "Dr. Kunle Adebayo",
-      role: "Program Director",
-      credentials: "Ex-McKinsey, 20yr Ops",
-      image: TeamPhoto,
+      name: "Mr. Adebola Omololu",
+      role: "Executive Chairman/Managing Director",
+      image: TeamOne,
     },
     {
-      name: "Dr. Kunle Adebayo",
-      role: "Program Director",
-      credentials: "Ex-McKinsey, 20yr Ops",
-      image: TeamPhoto,
+      name: "Mr. Tunji Oke",
+      role: "Co Founder/CCO",
+      image: TeamTwo,
     },
     {
-      name: "Dr. Kunle Adebayo",
-      role: "Program Director",
-      credentials: "Ex-McKinsey, 20yr Ops",
-      image: TeamPhoto,
+      name: "Mr. Seun Adeboyejo",
+      role: "Head of Product & Technology (CTO)",
+      image: TeamThree,
     },
     {
-      name: "Dr. Kunle Adebayo",
-      role: "Program Director",
-      credentials: "Ex-McKinsey, 20yr Ops",
-      image: TeamPhoto,
+      name: "Mrs Elizabeth Mbanuzue",
+      role: "Dean of Learning",
+      image: TeamFour,
     },
   ];
 
@@ -63,7 +61,6 @@ const Teams = () => {
               <div className="text-center mt-4 pb-2">
                 <h3 className="font-semibold text-sm text-[#191A15]">{member.name}</h3>
                 <p className="text-sm text-[#191A15]/70 mt-1">{member.role}</p>
-                <p className="text-xs text-[#191A15]/50 mt-1">{member.credentials}</p>
               </div>
             </div>
           ))}
