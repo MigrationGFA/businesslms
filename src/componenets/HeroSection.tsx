@@ -18,13 +18,7 @@ const HeroSection = ({
 }: HeroSectionProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
-const handleApplyClick = () => {
-  console.log("Apply clicked");
-  
- ReactGA.event("apply_for_seat_clicked");
 
-  onOpenApplicationModal();
-};
 
 
 const handleBrochureClick = () => {
@@ -101,7 +95,7 @@ const handleBrochureClick = () => {
       />
 
       <div className="relative z-20">
-        <Navbar onOpenApplicationModal={handleApplyClick} />
+        <Navbar onOpenApplicationModal={onOpenApplicationModal} />
       </div>
 
       <img
@@ -159,7 +153,7 @@ const handleBrochureClick = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={handleApplyClick}
+                onClick={onOpenApplicationModal}
                 className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition"
               >
                 Apply for a seat →

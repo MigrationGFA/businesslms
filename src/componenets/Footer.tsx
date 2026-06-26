@@ -8,14 +8,20 @@ const Footer: FC = () => {
     companyEmail: "",
     companyName: "",
     jobTitle: "",
+    hearAboutUs: "",
+    hearAboutUsOther: "",
   });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
   const [responseMessage, setResponseMessage] = useState("");
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
-  const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-  };
+  const handleChange =
+    (field: keyof typeof formData) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +34,11 @@ const Footer: FC = () => {
         full_name: formData.fullName,
         email: formData.companyEmail,
         company_name: formData.companyName,
-        job_title: formData.jobTitle
+        job_title: formData.jobTitle,
+         hear_about_us:
+    formData.hearAboutUs === "Other"
+      ? formData.hearAboutUsOther
+      : formData.hearAboutUs,
       };
 
       const response = await axios.post(endpoint, payload, {
@@ -37,18 +47,35 @@ const Footer: FC = () => {
       console.log("Application response:", response.data);
 
       const data = response.data;
-      const msg = typeof data === 'string' ? data : (data?.messages?.success || data?.message || "Application submitted successfully!");
+      const msg =
+        typeof data === "string"
+          ? data
+          : data?.messages?.success ||
+            data?.message ||
+            "Application submitted successfully!";
       setResponseMessage(msg);
       setStatus("success");
       setIsResultModalOpen(true);
-      setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
+      setFormData({
+        fullName: "",
+        companyEmail: "",
+        companyName: "",
+        jobTitle: "",
+        hearAboutUs: "",
+        hearAboutUsOther: "",
+      });
     } catch (error: any) {
       console.error("Error response data:", error.response?.data);
       console.error(error);
       const data = error.response?.data;
-      const msg = typeof data === 'string' 
-        ? data 
-        : (data?.messages?.error || data?.messages?.message || data?.message || data?.error || "Something went wrong. Please try again.");
+      const msg =
+        typeof data === "string"
+          ? data
+          : data?.messages?.error ||
+            data?.messages?.message ||
+            data?.message ||
+            data?.error ||
+            "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
       setIsResultModalOpen(true);
@@ -60,18 +87,21 @@ const Footer: FC = () => {
       <section
         className="relative overflow-hidden px-6 sm:px-10 lg:px-20 py-16 sm:py-24"
         style={{
-          background: "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
+          background:
+            "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
         }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start max-w-7xl mx-auto">
           {/* Left: heading + stats */}
           <div>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl text-white leading-tight">
-              Ready to use AI to <span className="italic text-blue-400">Grow</span> your Business?
+              Ready to use AI to{" "}
+              <span className="italic text-blue-400">Grow</span> your Business?
             </h2>
             <p className="text-gray-300 text-sm sm:text-base mt-6 max-w-lg">
-              Join an elite cohort of founders and business owners for the next 100-day
-              transformation program. Seats are limited by invitation and application review.
+              Join an elite cohort of founders and business owners for the next
+              100-day transformation program. Seats are limited by invitation
+              and application review.
             </p>
 
             <div className="mt-8 inline-flex flex-col sm:flex-row bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
@@ -88,28 +118,137 @@ const Footer: FC = () => {
 
           {/* Right: form panel */}
           <div className="bg-[#1C2333]/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8">
-            <h3 className="text-white text-lg font-medium mb-6">Application Form</h3>
+            <h3 className="text-white text-lg font-medium mb-6">
+              Application Form
+            </h3>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="fullName" className="block text-sm text-white/80 mb-2">Full Name</label>
-                <input id="fullName" type="text" required value={formData.fullName} onChange={handleChange("fullName")} placeholder="Emmanuel Kelvin" className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm text-white/80 mb-2"
+                >
+                  Full Name
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  required
+                  value={formData.fullName}
+                  onChange={handleChange("fullName")}
+                  placeholder="Emmanuel Kelvin"
+                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
               <div>
-                <label htmlFor="companyEmail" className="block text-sm text-white/80 mb-2">Company Email</label>
-                <input id="companyEmail" type="email" required value={formData.companyEmail} onChange={handleChange("companyEmail")} placeholder="emmanuel@company.com" className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label
+                  htmlFor="companyEmail"
+                  className="block text-sm text-white/80 mb-2"
+                >
+                  Company Email
+                </label>
+                <input
+                  id="companyEmail"
+                  type="email"
+                  required
+                  value={formData.companyEmail}
+                  onChange={handleChange("companyEmail")}
+                  placeholder="emmanuel@company.com"
+                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
               <div>
-                <label htmlFor="companyName" className="block text-sm text-white/80 mb-2">Company Name</label>
-                <input id="companyName" type="text" required value={formData.companyName} onChange={handleChange("companyName")} placeholder="Acme Holding" className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm text-white/80 mb-2"
+                >
+                  Company Name
+                </label>
+                <input
+                  id="companyName"
+                  type="text"
+                  required
+                  value={formData.companyName}
+                  onChange={handleChange("companyName")}
+                  placeholder="Acme Holding"
+                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
               <div>
-                <label htmlFor="jobTitle" className="block text-sm text-white/80 mb-2">Job Title</label>
-                <input id="jobTitle" type="text" required value={formData.jobTitle} onChange={handleChange("jobTitle")} placeholder="Chief Executive Officer" className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label
+                  htmlFor="jobTitle"
+                  className="block text-sm text-white/80 mb-2"
+                >
+                  Job Title
+                </label>
+                <input
+                  id="jobTitle"
+                  type="text"
+                  required
+                  value={formData.jobTitle}
+                  onChange={handleChange("jobTitle")}
+                  placeholder="Chief Executive Officer"
+                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <p className="block text-sm text-white/80 mb-3">
+                  How did you hear about us?
+                </p>
+
+                <div className="space-y-2 text-white">
+                  {[
+                    "Facebook",
+                    "LinkedIn",
+                    "X (Twitter)",
+                    "TikTok",
+                    "Other",
+                  ].map((option) => (
+                    <label key={option} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="hearAboutUs"
+                        value={option}
+                        required
+                        checked={formData.hearAboutUs === option}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            hearAboutUs: e.target.value,
+                            hearAboutUsOther:
+                              e.target.value === "Other"
+                                ? prev.hearAboutUsOther
+                                : "",
+                          }))
+                        }
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+
+                {formData.hearAboutUs === "Other" && (
+                  <div className="mt-3">
+                    <input
+                      type="text"
+                      placeholder="Please specify"
+                      required
+                      value={formData.hearAboutUsOther}
+                      onChange={handleChange("hearAboutUsOther")}
+                      className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                )}
               </div>
 
-              <button type="submit" disabled={status === "submitting"} className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 rounded-full transition">
-                {status === "submitting" ? "Submitting..." : "Submit Application →"}
+              <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 rounded-full transition"
+              >
+                {status === "submitting"
+                  ? "Submitting..."
+                  : "Submit Application →"}
               </button>
             </form>
           </div>
@@ -122,25 +261,55 @@ const Footer: FC = () => {
           <div className="flex flex-col items-center md:items-start gap-2">
             <p>© 2026 Remsana. Copyright and rights reserved.</p>
             <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-1">
-              <a href="mailto:info@remsana.com" className="hover:text-white transition flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <a
+                href="mailto:info@remsana.com"
+                className="hover:text-white transition flex items-center gap-1.5"
+              >
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
                 info@remsana.com
               </a>
               <span className="hidden sm:inline">·</span>
-              <a href="tel:07070498994" className="hover:text-white transition flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              <a
+                href="tel:07070498994"
+                className="hover:text-white transition flex items-center gap-1.5"
+              >
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
                 </svg>
                 +2347070498994
               </a>
             </div>
           </div>
           <div className="flex gap-3">
-            <a href="#" className="hover:text-white transition">Terms and Conditions</a>
+            <a href="#" className="hover:text-white transition">
+              Terms and Conditions
+            </a>
             <span>·</span>
-            <a href="#" className="hover:text-white transition">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition">
+              Privacy Policy
+            </a>
           </div>
         </div>
       </footer>

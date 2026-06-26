@@ -13,8 +13,12 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     companyEmail: "",
     companyName: "",
     jobTitle: "",
+    hearAboutUs: "",
+    hearAboutUsOther: "",
   });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleChange =
@@ -33,22 +37,43 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         full_name: formData.fullName,
         email: formData.companyEmail,
         company_name: formData.companyName,
-        job_title: formData.jobTitle
+        job_title: formData.jobTitle,
+        hear_about_us:
+          formData.hearAboutUs === "Other"
+            ? formData.hearAboutUsOther
+            : formData.hearAboutUs,
       };
 
       const response = await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
       const data = response.data;
-      const msg = typeof data === 'string' ? data : (data?.messages?.success || data?.message || "Application submitted successfully!");
+      const msg =
+        typeof data === "string"
+          ? data
+          : data?.messages?.success ||
+            data?.message ||
+            "Application submitted successfully!";
       setResponseMessage(msg);
       setStatus("success");
-      setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
+      setFormData({
+        fullName: "",
+        companyEmail: "",
+        companyName: "",
+        jobTitle: "",
+        hearAboutUs: "",
+        hearAboutUsOther: "",
+      });
     } catch (error: any) {
       const data = error.response?.data;
-      const msg = typeof data === 'string' 
-        ? data 
-        : (data?.messages?.error || data?.messages?.message || data?.message || data?.error || "Something went wrong. Please try again.");
+      const msg =
+        typeof data === "string"
+          ? data
+          : data?.messages?.error ||
+            data?.messages?.message ||
+            data?.message ||
+            data?.error ||
+            "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
     }
@@ -59,7 +84,14 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     setTimeout(() => {
       setStatus("idle");
       setResponseMessage("");
-      setFormData({ fullName: "", companyEmail: "", companyName: "", jobTitle: "" });
+      setFormData({
+        fullName: "",
+        companyEmail: "",
+        companyName: "",
+        jobTitle: "",
+        hearAboutUs: "",
+        hearAboutUsOther: "",
+      });
     }, 300);
   };
 
@@ -86,7 +118,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
             exit={{ opacity: 0, scale: 0.95, y: 24 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg rounded-3xl overflow-hidden"
+            className="relative w-full max-w-lg max-h-[90vh] rounded-3xl overflow-hidden"
             style={{
               background:
                 "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
@@ -95,7 +127,10 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
             {/* Subtle border ring */}
             <div className="absolute inset-0 rounded-3xl border border-white/10 pointer-events-none" />
 
-            <div className="relative p-8">
+            <div
+              className="relative p-8 overflow-y-auto"
+              style={{ maxHeight: "90vh" }}
+            >
               {/* Close button */}
               <button
                 id="application-modal-close"
@@ -150,8 +185,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                       <span className="italic text-blue-400">seat.</span>
                     </h2>
                     <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                      Join an elite cohort of founders and business owners for the
-                      next 100-day transformation program.
+                      Join an elite cohort of founders and business owners for
+                      the next 100-day transformation program.
                     </p>
 
                     <form
@@ -233,6 +268,94 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                         />
                       </div>
 
+                      <div>
+                        <p className="block text-sm text-white/80 mb-3">
+                          How did you hear about us?
+                        </p>
+
+                        <div className="space-y-2 text-white">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="hearAboutUs"
+                              value="Facebook"
+                              required
+                              checked={formData.hearAboutUs === "Facebook"}
+                              onChange={handleChange("hearAboutUs")}
+                            />
+                            Facebook
+                          </label>
+
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="hearAboutUs"
+                              value="LinkedIn"
+                              required
+                              checked={formData.hearAboutUs === "LinkedIn"}
+                              onChange={handleChange("hearAboutUs")}
+                            />
+                            LinkedIn
+                          </label>
+
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="hearAboutUs"
+                              value="X (Twitter)"
+                              required
+                              checked={formData.hearAboutUs === "X (Twitter)"}
+                              onChange={handleChange("hearAboutUs")}
+                            />
+                            X (Twitter)
+                          </label>
+
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="hearAboutUs"
+                              value="TikTok"
+                              required
+                              checked={formData.hearAboutUs === "TikTok"}
+                              onChange={handleChange("hearAboutUs")}
+                            />
+                            TikTok
+                          </label>
+
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="hearAboutUs"
+                              value="Other"
+                              required
+                              checked={formData.hearAboutUs === "Other"}
+                              onChange={handleChange("hearAboutUs")}
+                            />
+                            Other
+                          </label>
+                        </div>
+                        {formData.hearAboutUs === "Other" && (
+                          <div className="mt-3">
+                            <label
+                              htmlFor="hearAboutUsOther"
+                              className="block text-sm text-white/80 mb-2"
+                            >
+                              Please specify
+                            </label>
+
+                            <input
+                              id="hearAboutUsOther"
+                              type="text"
+                              required
+                              value={formData.hearAboutUsOther}
+                              onChange={handleChange("hearAboutUsOther")}
+                              placeholder="Please tell us where you heard about us"
+                              className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            />
+                          </div>
+                        )}
+                      </div>
+
                       <motion.button
                         id="application-submit"
                         whileHover={{ scale: 1.02 }}
@@ -279,17 +402,35 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                         delay: 0.1,
                       }}
                       className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 ${
-                        status === "success" 
-                          ? "bg-green-500/15 border border-green-500/30" 
+                        status === "success"
+                          ? "bg-green-500/15 border border-green-500/30"
                           : "bg-red-500/15 border border-red-500/30"
                       }`}
                     >
                       {status === "success" ? (
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          width="28"
+                          height="28"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#4ade80"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       ) : (
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                          width="28"
+                          height="28"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#f87171"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                       )}
@@ -307,8 +448,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                       whileTap={{ scale: 0.97 }}
                       onClick={handleClose}
                       className={`font-medium px-10 py-3 rounded-full transition-colors ${
-                        status === "success" 
-                          ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                        status === "success"
+                          ? "bg-blue-600 hover:bg-blue-700 text-white"
                           : "bg-red-600 hover:bg-red-700 text-white"
                       }`}
                     >
