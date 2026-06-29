@@ -7,6 +7,7 @@ const Footer: FC = () => {
     fullName: "",
     companyEmail: "",
     companyName: "",
+    phoneNumber: "",
     jobTitle: "",
     hearAboutUs: "",
     hearAboutUsOther: "",
@@ -23,8 +24,37 @@ const Footer: FC = () => {
       setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
+  const validatePhoneNumber = (phone: string) => {
+    // Remove spaces, dashes, brackets etc.
+    const cleaned = phone.replace(/\D/g, "");
+
+    // Local format: 08012345678
+    if (cleaned.startsWith("0")) {
+      return cleaned.length === 11;
+    }
+
+    // International format: 2348012345678
+    if (cleaned.startsWith("234")) {
+      return cleaned.length === 13;
+    }
+
+    return false;
+  };
+
+  const phoneError =
+    formData.phoneNumber && !validatePhoneNumber(formData.phoneNumber);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validatePhoneNumber(formData.phoneNumber)) {
+      setStatus("error");
+      setResponseMessage(
+        "Please enter a valid Nigerian phone number (e.g. 08012345678 or +2348012345678).",
+      );
+      setIsResultModalOpen(true);
+      return;
+    }
+
     setStatus("submitting");
     setResponseMessage("");
 
@@ -34,11 +64,12 @@ const Footer: FC = () => {
         full_name: formData.fullName,
         email: formData.companyEmail,
         company_name: formData.companyName,
+        phone_number: formData.phoneNumber,
         job_title: formData.jobTitle,
-         hear_about_us:
-    formData.hearAboutUs === "Other"
-      ? formData.hearAboutUsOther
-      : formData.hearAboutUs,
+        hear_about_us:
+          formData.hearAboutUs === "Other"
+            ? formData.hearAboutUsOther
+            : formData.hearAboutUs,
       };
 
       const response = await axios.post(endpoint, payload, {
@@ -60,6 +91,7 @@ const Footer: FC = () => {
         fullName: "",
         companyEmail: "",
         companyName: "",
+        phoneNumber: "",
         jobTitle: "",
         hearAboutUs: "",
         hearAboutUsOther: "",
@@ -157,6 +189,30 @@ const Footer: FC = () => {
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
+
+              <div>
+                <label
+                  htmlFor="phoneNumber"
+                  className="block text-sm text-white/80 mb-2"
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  required
+                  value={formData.phoneNumber}
+                  onChange={handleChange("phoneNumber")}
+                  placeholder="+234 801 234 5678"
+                  className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {phoneError && (
+                  <p className="mt-2 text-sm text-red-500">
+                    Please enter a valid Nigerian phone number.
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label
                   htmlFor="companyName"

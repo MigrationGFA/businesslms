@@ -12,6 +12,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     fullName: "",
     companyEmail: "",
     companyName: "",
+    phoneNumber: "",
     jobTitle: "",
     hearAboutUs: "",
     hearAboutUsOther: "",
@@ -20,6 +21,26 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [responseMessage, setResponseMessage] = useState("");
+
+const validatePhoneNumber = (phone: string) => {
+  // Remove spaces, dashes, brackets etc.
+  const cleaned = phone.replace(/\D/g, "");
+
+  // Local format: 08012345678
+  if (cleaned.startsWith("0")) {
+    return cleaned.length === 11;
+  }
+
+  // International format: 2348012345678
+  if (cleaned.startsWith("234")) {
+    return cleaned.length === 13;
+  }
+
+  return false;
+};
+
+  const phoneError =
+    formData.phoneNumber && !validatePhoneNumber(formData.phoneNumber);
 
   const handleChange =
     (field: keyof typeof formData) =>
@@ -37,6 +58,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         full_name: formData.fullName,
         email: formData.companyEmail,
         company_name: formData.companyName,
+        phone_number: formData.phoneNumber,
         job_title: formData.jobTitle,
         hear_about_us:
           formData.hearAboutUs === "Other"
@@ -60,6 +82,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         fullName: "",
         companyEmail: "",
         companyName: "",
+        phoneNumber: "",
         jobTitle: "",
         hearAboutUs: "",
         hearAboutUsOther: "",
@@ -88,6 +111,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         fullName: "",
         companyEmail: "",
         companyName: "",
+        phoneNumber: "",
         jobTitle: "",
         hearAboutUs: "",
         hearAboutUsOther: "",
@@ -104,7 +128,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 z-100 flex items-center justify-center p-4"
           onClick={handleClose}
         >
           {/* Blurred dark overlay */}
@@ -248,6 +272,29 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           placeholder="emmanuel@company.com"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="app-phoneNumber"
+                          className="block text-sm text-white/80 mb-2"
+                        >
+                          Phone Number
+                        </label>
+                        <input
+                          id="app-phoneNumber"
+                          type="tel"
+                          required
+                          value={formData.phoneNumber}
+                          onChange={handleChange("phoneNumber")}
+                          placeholder="+234 801 234 5678"
+                          className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        />
+                        {phoneError && (
+                          <p className="mt-2 text-sm text-red-500">
+                            Please enter a valid Nigerian phone number.
+                          </p>
+                        )}
                       </div>
 
                       <div>
