@@ -22,22 +22,25 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
   >("idle");
   const [responseMessage, setResponseMessage] = useState("");
 
-const validatePhoneNumber = (phone: string) => {
-  // Remove spaces, dashes, brackets etc.
-  const cleaned = phone.replace(/\D/g, "");
+  const BOOKING_URL =
+    "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1XxYL_OOCdf5m9zqSECG6f0jQjgEDe6dR-XI97Mn9uqJAVBCxQyzxNVdhkA9o8bQlSCT1RKKE6";
 
-  // Local format: 08012345678
-  if (cleaned.startsWith("0")) {
-    return cleaned.length === 11;
-  }
+  const validatePhoneNumber = (phone: string) => {
+    // Remove spaces, dashes, brackets etc.
+    const cleaned = phone.replace(/\D/g, "");
 
-  // International format: 2348012345678
-  if (cleaned.startsWith("234")) {
-    return cleaned.length === 13;
-  }
+    // Local format: 08012345678
+    if (cleaned.startsWith("0")) {
+      return cleaned.length === 11;
+    }
 
-  return false;
-};
+    // International format: 2348012345678
+    if (cleaned.startsWith("234")) {
+      return cleaned.length === 13;
+    }
+
+    return false;
+  };
 
   const phoneError =
     formData.phoneNumber && !validatePhoneNumber(formData.phoneNumber);
@@ -490,18 +493,33 @@ const validatePhoneNumber = (phone: string) => {
                       {responseMessage}
                     </p>
 
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={handleClose}
-                      className={`font-medium px-10 py-3 rounded-full transition-colors ${
-                        status === "success"
-                          ? "bg-blue-600 hover:bg-blue-700 text-white"
-                          : "bg-red-600 hover:bg-red-700 text-white"
-                      }`}
-                    >
-                      Done
-                    </motion.button>
+                    <div className="flex flex-col gap-3">
+                      {status === "success" && (
+                        <motion.a
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.97 }}
+                          href={BOOKING_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-full text-center transition-colors"
+                        >
+                          Book Your Strategy Session →
+                        </motion.a>
+                      )}
+
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={handleClose}
+                        className={`font-medium py-3 rounded-full transition-colors ${
+                          status === "success"
+                            ? "bg-white/10 hover:bg-white/20 text-white"
+                            : "bg-red-600 hover:bg-red-700 text-white"
+                        }`}
+                      >
+                        {status === "success" ? "Close" : "Done"}
+                      </motion.button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

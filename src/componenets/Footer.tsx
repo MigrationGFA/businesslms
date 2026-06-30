@@ -18,6 +18,9 @@ const Footer: FC = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
+  const BOOKING_URL =
+    "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1XxYL_OOCdf5m9zqSECG6f0jQjgEDe6dR-XI97Mn9uqJAVBCxQyzxNVdhkA9o8bQlSCT1RKKE6";
+
   const handleChange =
     (field: keyof typeof formData) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -369,11 +372,11 @@ const Footer: FC = () => {
           </div>
         </div>
       </footer>
-
       <ResultModal
         isOpen={isResultModalOpen}
         status={status as "success" | "error"}
         message={responseMessage}
+        bookingUrl={BOOKING_URL}
         onClose={() => {
           setIsResultModalOpen(false);
           setStatus("idle");

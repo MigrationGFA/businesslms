@@ -5,10 +5,10 @@ const AboutFooter: FC = () => {
     <>
       {/* CTA Section */}
       <section
-        className="relative overflow-hidden px-6 sm:px-10 lg:px-20 py-16 sm:py-24 bg-gradient-to-br from-[#020A15] via-[#051833] to-[#01070F]"
+        className="relative overflow-hidden px-6 sm:px-10 lg:px-20 py-16 sm:py-24 bg-linear-to-br from-[#020A15] via-[#051833] to-[#01070F]"
       >
         {/* Ambient background glow */}
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-112.5 h-112.5 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto flex flex-col items-start text-left">
           {/* Subtitle */}
@@ -27,7 +27,7 @@ const AboutFooter: FC = () => {
           </p>
 
           {/* Card */}
-          <div className="bg-[#EBF3FE] rounded-[24px] p-6 sm:p-8 lg:p-10 w-full max-w-md shadow-xl shadow-black/25 border border-blue-200/15">
+          <div className="bg-[#EBF3FE] rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-md shadow-xl shadow-black/25 border border-blue-200/15">
             <h3 className="text-2xl sm:text-3xl font-bold text-[#0053D0] mb-2 tracking-tight">
               Learn
             </h3>
