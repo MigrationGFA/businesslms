@@ -47,7 +47,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
 
   const handleChange =
     (field: keyof typeof formData) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
@@ -319,71 +319,37 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                       </div>
 
                       <div>
-                        <p className="block text-sm text-white/80 mb-3">
+                        <label
+                          htmlFor="app-hearAboutUs"
+                          className="block text-sm text-white/80 mb-2"
+                        >
                           How did you hear about us?
-                        </p>
-
-                        <div className="space-y-2 text-white">
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="hearAboutUs"
-                              value="Facebook"
-                              required
-                              checked={formData.hearAboutUs === "Facebook"}
-                              onChange={handleChange("hearAboutUs")}
-                            />
-                            Facebook
-                          </label>
-
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="hearAboutUs"
-                              value="LinkedIn"
-                              required
-                              checked={formData.hearAboutUs === "LinkedIn"}
-                              onChange={handleChange("hearAboutUs")}
-                            />
-                            LinkedIn
-                          </label>
-
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="hearAboutUs"
-                              value="X (Twitter)"
-                              required
-                              checked={formData.hearAboutUs === "X (Twitter)"}
-                              onChange={handleChange("hearAboutUs")}
-                            />
-                            X (Twitter)
-                          </label>
-
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="hearAboutUs"
-                              value="TikTok"
-                              required
-                              checked={formData.hearAboutUs === "TikTok"}
-                              onChange={handleChange("hearAboutUs")}
-                            />
-                            TikTok
-                          </label>
-
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="hearAboutUs"
-                              value="Other"
-                              required
-                              checked={formData.hearAboutUs === "Other"}
-                              onChange={handleChange("hearAboutUs")}
-                            />
-                            Other
-                          </label>
-                        </div>
+                        </label>
+                        <select
+                          id="app-hearAboutUs"
+                          required
+                          value={formData.hearAboutUs}
+                          onChange={handleChange("hearAboutUs")}
+                          className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition appearance-none cursor-pointer"
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "right 16px center",
+                          }}
+                        >
+                          <option value="" disabled>
+                            Select an option
+                          </option>
+                          <option value="YouTube">YouTube</option>
+                          <option value="Email">Email</option>
+                          <option value="SMS">SMS</option>
+                          <option value="From a Friend">From a Friend</option>
+                          <option value="Facebook">Facebook</option>
+                          <option value="LinkedIn">LinkedIn</option>
+                          <option value="X (Twitter)">X (Twitter)</option>
+                          <option value="TikTok">TikTok</option>
+                          <option value="Other">Other</option>
+                        </select>
                         {formData.hearAboutUs === "Other" && (
                           <div className="mt-3">
                             <label
@@ -392,7 +358,6 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                             >
                               Please specify
                             </label>
-
                             <input
                               id="hearAboutUsOther"
                               type="text"
