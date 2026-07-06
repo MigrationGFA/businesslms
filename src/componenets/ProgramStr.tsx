@@ -18,7 +18,7 @@ const ProgramStr = () => {
             </h3>
             <div className="w-14 h-4 bg-[#0B3FD9] mt-2 mb-6 " />
             <p className="text-xl sm:text-2xl leading-snug">
-              August 3rd - September 30th 2027
+              August 3rd - September 30th 2026
             </p>
           </div>
 
