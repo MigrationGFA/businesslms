@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
+import { trackEvent, trackFieldFocus, trackFieldFilled } from "../analytics";
 
 interface BrochureModalProps {
   isOpen: boolean;
@@ -9,25 +10,48 @@ interface BrochureModalProps {
 
 const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("Something went wrong. Please try again.");
+
+  const validatePhoneNumber = (phone: string) => {
+    const cleaned = phone.replace(/\D/g, "");
+    if (cleaned.startsWith("0")) {
+      return cleaned.length === 11;
+    }
+    if (cleaned.startsWith("234")) {
+      return cleaned.length === 13;
+    }
+    return false;
+  };
+
+  const phoneError = phoneNumber && !validatePhoneNumber(phoneNumber);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validatePhoneNumber(phoneNumber)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid Nigerian phone number.");
+      return;
+    }
+
     setStatus("submitting");
-    console.log("Submitting brochure request for email:", email);
+    trackEvent("brochure_form_submitted");
     try {
       const endpoint = import.meta.env.VITE_BROCHURE_ENDPOINT;
-      const payload = { email };
-      console.log("Sending payload to endpoint:", endpoint, payload);
-      const response = await axios.post(endpoint, payload, { 
+      const payload = { email, phone_number: phoneNumber };
+      await axios.post(endpoint, payload, { 
         headers: { "Content-Type": "application/json" } 
       });
-      console.log("Brochure response:", response.data);
       setStatus("success");
+      trackEvent("brochure_form_success");
       setEmail("");
-    } catch (error) {
+      setPhoneNumber("");
+    } catch (error: any) {
       console.error("Error submitting brochure request:", error);
       setStatus("error");
+      setErrorMessage(error?.response?.data?.message || error?.message || "Something went wrong. Please try again.");
+      trackEvent("brochure_form_error", { error_message: error?.message || "Unknown error" });
     }
   };
 
@@ -37,6 +61,8 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
     setTimeout(() => {
       setStatus("idle");
       setEmail("");
+      setPhoneNumber("");
+      setErrorMessage("Something went wrong. Please try again.");
     }, 300);
   };
 
@@ -127,7 +153,7 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                       <span className="italic text-blue-400">full program</span> details.
                     </h2>
                     <p className="text-gray-300 text-sm leading-relaxed mb-8">
-                      Enter your email and we'll send the Remsana Academy brochure straight to your inbox.
+                      Enter your details and we'll send the Remsana Academy brochure straight to your inbox.
                     </p>
 
                     <form id="brochure-form" onSubmit={handleSubmit} className="space-y-4">
@@ -144,9 +170,36 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
+                          onFocus={() => trackFieldFocus("brochure", "email")}
+                          onBlur={() => trackFieldFilled("brochure", "email", email)}
                           placeholder="you@company.com"
                           className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
+                      </div>
+                      
+                      <div>
+                        <label
+                          htmlFor="brochure-phoneNumber"
+                          className="block text-sm text-white/80 mb-2"
+                        >
+                          Phone Number
+                        </label>
+                        <input
+                          id="brochure-phoneNumber"
+                          type="tel"
+                          required
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          onFocus={() => trackFieldFocus("brochure", "phoneNumber")}
+                          onBlur={() => trackFieldFilled("brochure", "phoneNumber", phoneNumber)}
+                          placeholder="+234 801 234 5678"
+                          className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        />
+                        {phoneError && (
+                          <p className="mt-2 text-sm text-red-500">
+                            Please enter a valid Nigerian phone number.
+                          </p>
+                        )}
                       </div>
 
                       <motion.button
@@ -183,7 +236,7 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                             exit={{ opacity: 0, y: -4 }}
                             className="text-red-400 text-sm text-center"
                           >
-                            Something went wrong. Please try again.
+                            {errorMessage}
                           </motion.p>
                         )}
                       </AnimatePresence>

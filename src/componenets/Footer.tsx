@@ -1,6 +1,7 @@
 import { useState, type FC } from "react";
 import axios from "axios";
 import ResultModal from "./ResultModal";
+import { trackEvent, trackFieldFocus, trackFieldFilled } from "../analytics";
 
 const Footer: FC = () => {
   const [formData, setFormData] = useState({
@@ -60,6 +61,7 @@ const Footer: FC = () => {
 
     setStatus("submitting");
     setResponseMessage("");
+    trackEvent("application_form_submitted", { source: "footer" });
 
     try {
       const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
@@ -89,6 +91,7 @@ const Footer: FC = () => {
             "Application submitted successfully!";
       setResponseMessage(msg);
       setStatus("success");
+      trackEvent("application_form_success", { source: "footer" });
       setIsResultModalOpen(true);
       setFormData({
         fullName: "",
@@ -113,6 +116,7 @@ const Footer: FC = () => {
             "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
+      trackEvent("application_form_error", { source: "footer", error_message: msg });
       setIsResultModalOpen(true);
     }
   };
@@ -171,6 +175,8 @@ const Footer: FC = () => {
                   required
                   value={formData.fullName}
                   onChange={handleChange("fullName")}
+                  onFocus={() => trackFieldFocus("footer", "fullName")}
+                  onBlur={() => trackFieldFilled("footer", "fullName", formData.fullName)}
                   placeholder="Emmanuel Kelvin"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -188,6 +194,8 @@ const Footer: FC = () => {
                   required
                   value={formData.companyEmail}
                   onChange={handleChange("companyEmail")}
+                  onFocus={() => trackFieldFocus("footer", "companyEmail")}
+                  onBlur={() => trackFieldFilled("footer", "companyEmail", formData.companyEmail)}
                   placeholder="emmanuel@company.com"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -206,6 +214,8 @@ const Footer: FC = () => {
                   required
                   value={formData.phoneNumber}
                   onChange={handleChange("phoneNumber")}
+                  onFocus={() => trackFieldFocus("footer", "phoneNumber")}
+                  onBlur={() => trackFieldFilled("footer", "phoneNumber", formData.phoneNumber)}
                   placeholder="+234 801 234 5678"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -229,6 +239,8 @@ const Footer: FC = () => {
                   required
                   value={formData.companyName}
                   onChange={handleChange("companyName")}
+                  onFocus={() => trackFieldFocus("footer", "companyName")}
+                  onBlur={() => trackFieldFilled("footer", "companyName", formData.companyName)}
                   placeholder="Acme Holding"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -246,6 +258,8 @@ const Footer: FC = () => {
                   required
                   value={formData.jobTitle}
                   onChange={handleChange("jobTitle")}
+                  onFocus={() => trackFieldFocus("footer", "jobTitle")}
+                  onBlur={() => trackFieldFilled("footer", "jobTitle", formData.jobTitle)}
                   placeholder="Chief Executive Officer"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -262,6 +276,8 @@ const Footer: FC = () => {
                   required
                   value={formData.hearAboutUs}
                   onChange={handleChange("hearAboutUs")}
+                  onFocus={() => trackFieldFocus("footer", "hearAboutUs")}
+                  onBlur={() => trackFieldFilled("footer", "hearAboutUs", formData.hearAboutUs)}
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition appearance-none cursor-pointer"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -291,6 +307,8 @@ const Footer: FC = () => {
                       required
                       value={formData.hearAboutUsOther}
                       onChange={handleChange("hearAboutUsOther")}
+                      onFocus={() => trackFieldFocus("footer", "hearAboutUsOther")}
+                      onBlur={() => trackFieldFilled("footer", "hearAboutUsOther", formData.hearAboutUsOther)}
                       className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>

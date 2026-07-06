@@ -11,16 +11,14 @@ import NoExcute from "../componenets/NoExcute";
 import Footer from "../componenets/Footer";
 import BrochureModal from "../componenets/BrochureModal";
 import ApplicationModal from "../componenets/ApplicationModal";
-import ReactGA from "react-ga4";
+import { trackEvent } from "../analytics";
 
 const LandingPage = () => {
   const [isBrochureModalOpen, setIsBrochureModalOpen] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
 
   const handleOpenApplicationModal = () => {
-    console.log("Apply clicked");
-
-    ReactGA.event("apply_for_seat_clicked");
+    trackEvent("apply_button_clicked", { source: "landing_page" });
 
     setIsApplicationModalOpen(true);
   };

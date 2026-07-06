@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
+import { trackEvent, trackFieldFocus, trackFieldFilled } from "../analytics";
 
 interface ApplicationModalProps {
   isOpen: boolean;
@@ -26,19 +27,13 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1XxYL_OOCdf5m9zqSECG6f0jQjgEDe6dR-XI97Mn9uqJAVBCxQyzxNVdhkA9o8bQlSCT1RKKE6";
 
   const validatePhoneNumber = (phone: string) => {
-    // Remove spaces, dashes, brackets etc.
     const cleaned = phone.replace(/\D/g, "");
-
-    // Local format: 08012345678
     if (cleaned.startsWith("0")) {
       return cleaned.length === 11;
     }
-
-    // International format: 2348012345678
     if (cleaned.startsWith("234")) {
       return cleaned.length === 13;
     }
-
     return false;
   };
 
@@ -55,6 +50,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     e.preventDefault();
     setStatus("submitting");
     setResponseMessage("");
+    trackEvent("application_form_submitted", { source: "modal" });
     try {
       const endpoint = import.meta.env.VITE_APPLICATION_FORM_ENDPOINT;
       const payload = {
@@ -81,6 +77,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
             "Application submitted successfully!";
       setResponseMessage(msg);
       setStatus("success");
+      trackEvent("application_form_success", { source: "modal" });
       setFormData({
         fullName: "",
         companyEmail: "",
@@ -102,6 +99,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
             "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
+      trackEvent("application_form_error", { source: "modal", error_message: msg });
     }
   };
 
@@ -235,6 +233,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                             required
                             value={formData.fullName}
                             onChange={handleChange("fullName")}
+                            onFocus={() => trackFieldFocus("modal", "fullName")}
+                            onBlur={() => trackFieldFilled("modal", "fullName", formData.fullName)}
                             placeholder="Emmanuel Kelvin"
                             className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                           />
@@ -253,6 +253,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                             required
                             value={formData.jobTitle}
                             onChange={handleChange("jobTitle")}
+                            onFocus={() => trackFieldFocus("modal", "jobTitle")}
+                            onBlur={() => trackFieldFilled("modal", "jobTitle", formData.jobTitle)}
                             placeholder="Chief Executive Officer"
                             className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                           />
@@ -272,6 +274,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.companyEmail}
                           onChange={handleChange("companyEmail")}
+                          onFocus={() => trackFieldFocus("modal", "companyEmail")}
+                          onBlur={() => trackFieldFilled("modal", "companyEmail", formData.companyEmail)}
                           placeholder="emmanuel@company.com"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -290,6 +294,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.phoneNumber}
                           onChange={handleChange("phoneNumber")}
+                          onFocus={() => trackFieldFocus("modal", "phoneNumber")}
+                          onBlur={() => trackFieldFilled("modal", "phoneNumber", formData.phoneNumber)}
                           placeholder="+234 801 234 5678"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -313,6 +319,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.companyName}
                           onChange={handleChange("companyName")}
+                          onFocus={() => trackFieldFocus("modal", "companyName")}
+                          onBlur={() => trackFieldFilled("modal", "companyName", formData.companyName)}
                           placeholder="Acme Holdings"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -330,6 +338,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.hearAboutUs}
                           onChange={handleChange("hearAboutUs")}
+                          onFocus={() => trackFieldFocus("modal", "hearAboutUs")}
+                          onBlur={() => trackFieldFilled("modal", "hearAboutUs", formData.hearAboutUs)}
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition appearance-none cursor-pointer"
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -364,6 +374,8 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                               required
                               value={formData.hearAboutUsOther}
                               onChange={handleChange("hearAboutUsOther")}
+                              onFocus={() => trackFieldFocus("modal", "hearAboutUsOther")}
+                              onBlur={() => trackFieldFilled("modal", "hearAboutUsOther", formData.hearAboutUsOther)}
                               placeholder="Please tell us where you heard about us"
                               className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
@@ -464,6 +476,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.97 }}
                           href={BOOKING_URL}
+                          onClick={() => trackEvent("book_strategy_session_clicked", { source: "modal" })}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-full text-center transition-colors"

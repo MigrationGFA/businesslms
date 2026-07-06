@@ -4,6 +4,7 @@ import OurJourney from "../componenets/OurJourney";
 import RemsanaDifference from "../componenets/RemsanaDifference";
 import AboutFooter from "../componenets/AboutFooter";
 import ApplicationModal from "../componenets/ApplicationModal";
+import { trackEvent } from "../analytics";
 
 const AboutPage = () => {
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
@@ -18,7 +19,10 @@ const AboutPage = () => {
         {/* Sections */}
            {/* Sections */}
         <main>
-          <AboutHero onOpenApplicationModal={() => setIsApplicationModalOpen(true)} />
+          <AboutHero onOpenApplicationModal={() => {
+            trackEvent("apply_button_clicked", { source: "about_page" });
+            setIsApplicationModalOpen(true);
+          }} />
           <OurJourney />
           <RemsanaDifference />
         </main>
