@@ -28,6 +28,17 @@ const Footer: FC = () => {
       setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
+  const redirectToBooking = () => {
+    trackEvent("redirect_to_booking", {
+      source: "footer",
+    });
+
+    // Give GA a tiny moment to send the event
+    setTimeout(() => {
+      window.location.replace(BOOKING_URL);
+    }, 400);
+  };
+
   const validatePhoneNumber = (phone: string) => {
     // Remove spaces, dashes, brackets etc.
     const cleaned = phone.replace(/\D/g, "");
@@ -71,28 +82,24 @@ const Footer: FC = () => {
         company_name: formData.companyName,
         phone_number: formData.phoneNumber,
         job_title: formData.jobTitle,
-        hear_about_us:
-          formData.hearAboutUs === "Other"
-            ? formData.hearAboutUsOther
-            : formData.hearAboutUs,
+        hear_about_us: formData.hearAboutUs,
+        hear_about_us_other:
+          formData.hearAboutUs === "Other" ? formData.hearAboutUsOther : null,
       };
 
-      const response = await axios.post(endpoint, payload, {
+      await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("Application response:", response.data);
 
-      const data = response.data;
-      const msg =
-        typeof data === "string"
-          ? data
-          : data?.messages?.success ||
-            data?.message ||
-            "Application submitted successfully!";
-      setResponseMessage(msg);
+      setResponseMessage(
+        "Your application has been received successfully.\n\nPlease wait while we redirect you to schedule your strategy session with the Dean of Academics.",
+      );
       setStatus("success");
       trackEvent("application_form_success", { source: "footer" });
       setIsResultModalOpen(true);
+      setTimeout(() => {
+        redirectToBooking();
+      }, 1500);
       setFormData({
         fullName: "",
         companyEmail: "",
@@ -116,7 +123,10 @@ const Footer: FC = () => {
             "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
-      trackEvent("application_form_error", { source: "footer", error_message: msg });
+      trackEvent("application_form_error", {
+        source: "footer",
+        error_message: msg,
+      });
       setIsResultModalOpen(true);
     }
   };
@@ -176,7 +186,9 @@ const Footer: FC = () => {
                   value={formData.fullName}
                   onChange={handleChange("fullName")}
                   onFocus={() => trackFieldFocus("footer", "fullName")}
-                  onBlur={() => trackFieldFilled("footer", "fullName", formData.fullName)}
+                  onBlur={() =>
+                    trackFieldFilled("footer", "fullName", formData.fullName)
+                  }
                   placeholder="Emmanuel Kelvin"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -195,7 +207,13 @@ const Footer: FC = () => {
                   value={formData.companyEmail}
                   onChange={handleChange("companyEmail")}
                   onFocus={() => trackFieldFocus("footer", "companyEmail")}
-                  onBlur={() => trackFieldFilled("footer", "companyEmail", formData.companyEmail)}
+                  onBlur={() =>
+                    trackFieldFilled(
+                      "footer",
+                      "companyEmail",
+                      formData.companyEmail,
+                    )
+                  }
                   placeholder="emmanuel@company.com"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -215,7 +233,13 @@ const Footer: FC = () => {
                   value={formData.phoneNumber}
                   onChange={handleChange("phoneNumber")}
                   onFocus={() => trackFieldFocus("footer", "phoneNumber")}
-                  onBlur={() => trackFieldFilled("footer", "phoneNumber", formData.phoneNumber)}
+                  onBlur={() =>
+                    trackFieldFilled(
+                      "footer",
+                      "phoneNumber",
+                      formData.phoneNumber,
+                    )
+                  }
                   placeholder="+234 801 234 5678"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -240,7 +264,13 @@ const Footer: FC = () => {
                   value={formData.companyName}
                   onChange={handleChange("companyName")}
                   onFocus={() => trackFieldFocus("footer", "companyName")}
-                  onBlur={() => trackFieldFilled("footer", "companyName", formData.companyName)}
+                  onBlur={() =>
+                    trackFieldFilled(
+                      "footer",
+                      "companyName",
+                      formData.companyName,
+                    )
+                  }
                   placeholder="Acme Holding"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -259,7 +289,9 @@ const Footer: FC = () => {
                   value={formData.jobTitle}
                   onChange={handleChange("jobTitle")}
                   onFocus={() => trackFieldFocus("footer", "jobTitle")}
-                  onBlur={() => trackFieldFilled("footer", "jobTitle", formData.jobTitle)}
+                  onBlur={() =>
+                    trackFieldFilled("footer", "jobTitle", formData.jobTitle)
+                  }
                   placeholder="Chief Executive Officer"
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -277,7 +309,13 @@ const Footer: FC = () => {
                   value={formData.hearAboutUs}
                   onChange={handleChange("hearAboutUs")}
                   onFocus={() => trackFieldFocus("footer", "hearAboutUs")}
-                  onBlur={() => trackFieldFilled("footer", "hearAboutUs", formData.hearAboutUs)}
+                  onBlur={() =>
+                    trackFieldFilled(
+                      "footer",
+                      "hearAboutUs",
+                      formData.hearAboutUs,
+                    )
+                  }
                   className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition appearance-none cursor-pointer"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -307,8 +345,16 @@ const Footer: FC = () => {
                       required
                       value={formData.hearAboutUsOther}
                       onChange={handleChange("hearAboutUsOther")}
-                      onFocus={() => trackFieldFocus("footer", "hearAboutUsOther")}
-                      onBlur={() => trackFieldFilled("footer", "hearAboutUsOther", formData.hearAboutUsOther)}
+                      onFocus={() =>
+                        trackFieldFocus("footer", "hearAboutUsOther")
+                      }
+                      onBlur={() =>
+                        trackFieldFilled(
+                          "footer",
+                          "hearAboutUsOther",
+                          formData.hearAboutUsOther,
+                        )
+                      }
                       className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>

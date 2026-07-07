@@ -46,6 +46,17 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
       setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
+  const redirectToBooking = () => {
+    trackEvent("redirect_to_booking", {
+      source: "footer",
+    });
+
+    // Give GA a tiny moment to send the event
+    setTimeout(() => {
+      window.location.replace(BOOKING_URL);
+    }, 400);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
@@ -59,25 +70,24 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         company_name: formData.companyName,
         phone_number: formData.phoneNumber,
         job_title: formData.jobTitle,
-        hear_about_us:
-          formData.hearAboutUs === "Other"
-            ? formData.hearAboutUsOther
-            : formData.hearAboutUs,
+        hear_about_us: formData.hearAboutUs,
+        hear_about_us_other:
+          formData.hearAboutUs === "Other" ? formData.hearAboutUsOther : null,
       };
 
-      const response = await axios.post(endpoint, payload, {
+      await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
-      const data = response.data;
-      const msg =
-        typeof data === "string"
-          ? data
-          : data?.messages?.success ||
-            data?.message ||
-            "Application submitted successfully!";
-      setResponseMessage(msg);
-      setStatus("success");
       trackEvent("application_form_success", { source: "modal" });
+
+      setResponseMessage(
+        "Your application has been received successfully.\n\nPlease wait while we redirect you to schedule your strategy session with the Dean of Academics.",
+      );
+      setStatus("success");
+      setStatus("success");
+      setTimeout(() => {
+        redirectToBooking();
+      }, 1500);
       setFormData({
         fullName: "",
         companyEmail: "",
@@ -99,7 +109,10 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
             "Something went wrong. Please try again.";
       setResponseMessage(msg);
       setStatus("error");
-      trackEvent("application_form_error", { source: "modal", error_message: msg });
+      trackEvent("application_form_error", {
+        source: "modal",
+        error_message: msg,
+      });
     }
   };
 
@@ -234,7 +247,13 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                             value={formData.fullName}
                             onChange={handleChange("fullName")}
                             onFocus={() => trackFieldFocus("modal", "fullName")}
-                            onBlur={() => trackFieldFilled("modal", "fullName", formData.fullName)}
+                            onBlur={() =>
+                              trackFieldFilled(
+                                "modal",
+                                "fullName",
+                                formData.fullName,
+                              )
+                            }
                             placeholder="Emmanuel Kelvin"
                             className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                           />
@@ -254,7 +273,13 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                             value={formData.jobTitle}
                             onChange={handleChange("jobTitle")}
                             onFocus={() => trackFieldFocus("modal", "jobTitle")}
-                            onBlur={() => trackFieldFilled("modal", "jobTitle", formData.jobTitle)}
+                            onBlur={() =>
+                              trackFieldFilled(
+                                "modal",
+                                "jobTitle",
+                                formData.jobTitle,
+                              )
+                            }
                             placeholder="Chief Executive Officer"
                             className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                           />
@@ -274,8 +299,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.companyEmail}
                           onChange={handleChange("companyEmail")}
-                          onFocus={() => trackFieldFocus("modal", "companyEmail")}
-                          onBlur={() => trackFieldFilled("modal", "companyEmail", formData.companyEmail)}
+                          onFocus={() =>
+                            trackFieldFocus("modal", "companyEmail")
+                          }
+                          onBlur={() =>
+                            trackFieldFilled(
+                              "modal",
+                              "companyEmail",
+                              formData.companyEmail,
+                            )
+                          }
                           placeholder="emmanuel@company.com"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -294,8 +327,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.phoneNumber}
                           onChange={handleChange("phoneNumber")}
-                          onFocus={() => trackFieldFocus("modal", "phoneNumber")}
-                          onBlur={() => trackFieldFilled("modal", "phoneNumber", formData.phoneNumber)}
+                          onFocus={() =>
+                            trackFieldFocus("modal", "phoneNumber")
+                          }
+                          onBlur={() =>
+                            trackFieldFilled(
+                              "modal",
+                              "phoneNumber",
+                              formData.phoneNumber,
+                            )
+                          }
                           placeholder="+234 801 234 5678"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -319,8 +360,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.companyName}
                           onChange={handleChange("companyName")}
-                          onFocus={() => trackFieldFocus("modal", "companyName")}
-                          onBlur={() => trackFieldFilled("modal", "companyName", formData.companyName)}
+                          onFocus={() =>
+                            trackFieldFocus("modal", "companyName")
+                          }
+                          onBlur={() =>
+                            trackFieldFilled(
+                              "modal",
+                              "companyName",
+                              formData.companyName,
+                            )
+                          }
                           placeholder="Acme Holdings"
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
@@ -338,8 +387,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                           required
                           value={formData.hearAboutUs}
                           onChange={handleChange("hearAboutUs")}
-                          onFocus={() => trackFieldFocus("modal", "hearAboutUs")}
-                          onBlur={() => trackFieldFilled("modal", "hearAboutUs", formData.hearAboutUs)}
+                          onFocus={() =>
+                            trackFieldFocus("modal", "hearAboutUs")
+                          }
+                          onBlur={() =>
+                            trackFieldFilled(
+                              "modal",
+                              "hearAboutUs",
+                              formData.hearAboutUs,
+                            )
+                          }
                           className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition appearance-none cursor-pointer"
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -374,8 +431,16 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                               required
                               value={formData.hearAboutUsOther}
                               onChange={handleChange("hearAboutUsOther")}
-                              onFocus={() => trackFieldFocus("modal", "hearAboutUsOther")}
-                              onBlur={() => trackFieldFilled("modal", "hearAboutUsOther", formData.hearAboutUsOther)}
+                              onFocus={() =>
+                                trackFieldFocus("modal", "hearAboutUsOther")
+                              }
+                              onBlur={() =>
+                                trackFieldFilled(
+                                  "modal",
+                                  "hearAboutUsOther",
+                                  formData.hearAboutUsOther,
+                                )
+                              }
                               placeholder="Please tell us where you heard about us"
                               className="w-full rounded-full px-4 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
@@ -470,13 +535,17 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                       {responseMessage}
                     </p>
 
-                    <div className="flex flex-col gap-3">
+                    {/* <div className="flex flex-col gap-3">
                       {status === "success" && (
                         <motion.a
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.97 }}
                           href={BOOKING_URL}
-                          onClick={() => trackEvent("book_strategy_session_clicked", { source: "modal" })}
+                          onClick={() =>
+                            trackEvent("book_strategy_session_clicked", {
+                              source: "modal",
+                            })
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-full text-center transition-colors"
@@ -497,7 +566,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                       >
                         {status === "success" ? "Close" : "Done"}
                       </motion.button>
-                    </div>
+                    </div> */}
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -13,7 +13,7 @@ const ResultModal = ({
   status,
   message,
   onClose,
-  bookingUrl,
+  
 }: ResultModalProps) => {
   return (
     <AnimatePresence>
@@ -113,7 +113,7 @@ const ResultModal = ({
               {message}
             </p>
 
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               {status === "success" && bookingUrl && (
                 <motion.a
                   whileHover={{ scale: 1.02 }}
@@ -139,7 +139,7 @@ const ResultModal = ({
               >
                 Close
               </motion.button>
-            </div>
+            </div> */}
           </motion.div>
         </motion.div>
       )}

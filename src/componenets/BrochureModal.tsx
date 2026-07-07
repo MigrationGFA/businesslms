@@ -11,8 +11,14 @@ interface BrochureModalProps {
 const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("Something went wrong. Please try again.");
+  const [full_name, setfull_name] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState(
+    "Something went wrong. Please try again.",
+  );
+  const [consent, setConsent] = useState(true);
 
   const validatePhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, "");
@@ -34,24 +40,37 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
       setErrorMessage("Please enter a valid Nigerian phone number.");
       return;
     }
+    // Validate consent
+    if (!consent) {
+      setStatus("error");
+      setErrorMessage("Please agree to receive the brochure.");
+      return;
+    }
 
     setStatus("submitting");
     trackEvent("brochure_form_submitted");
     try {
       const endpoint = import.meta.env.VITE_BROCHURE_ENDPOINT;
-      const payload = { email, phone_number: phoneNumber };
-      await axios.post(endpoint, payload, { 
-        headers: { "Content-Type": "application/json" } 
+      const payload = { full_name, email, phone_number: phoneNumber };
+      await axios.post(endpoint, payload, {
+        headers: { "Content-Type": "application/json" },
       });
       setStatus("success");
       trackEvent("brochure_form_success");
+      setfull_name("");
       setEmail("");
       setPhoneNumber("");
     } catch (error: any) {
       console.error("Error submitting brochure request:", error);
       setStatus("error");
-      setErrorMessage(error?.response?.data?.message || error?.message || "Something went wrong. Please try again.");
-      trackEvent("brochure_form_error", { error_message: error?.message || "Unknown error" });
+      setErrorMessage(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong. Please try again.",
+      );
+      trackEvent("brochure_form_error", {
+        error_message: error?.message || "Unknown error",
+      });
     }
   };
 
@@ -60,6 +79,7 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
     // Reset state after the exit animation finishes
     setTimeout(() => {
       setStatus("idle");
+      setfull_name("");
       setEmail("");
       setPhoneNumber("");
       setErrorMessage("Something went wrong. Please try again.");
@@ -91,7 +111,8 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
             onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-md rounded-3xl overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
+              background:
+                "linear-gradient(135deg, #020A15 0%, #0053D0 50%, #020A15 100%)",
             }}
           >
             {/* Subtle border ring */}
@@ -150,13 +171,74 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                   >
                     <h2 className="text-2xl sm:text-3xl text-white font-medium leading-snug mb-2">
                       Get the{" "}
-                      <span className="italic text-blue-400">full program</span> details.
+                      <span className="italic text-blue-400">full program</span>{" "}
+                      details.
                     </h2>
                     <p className="text-gray-300 text-sm leading-relaxed mb-8">
-                      Enter your details and we'll send the Remsana Academy brochure straight to your inbox.
+                    Enter your details to receive the Remsana Academy brochure and explore our programs.
                     </p>
 
-                    <form id="brochure-form" onSubmit={handleSubmit} className="space-y-4">
+                    <form
+                      id="brochure-form"
+                      onSubmit={handleSubmit}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <label
+                          htmlFor="brochure-name"
+                          className="block text-sm text-white/80 mb-2"
+                        >
+                          Full Name
+                        </label>
+
+                        <input
+                          id="brochure-name"
+                          type="text"
+                          required
+                          value={full_name}
+                          onChange={(e) => setfull_name(e.target.value)}
+                          onFocus={() => trackFieldFocus("brochure", "full_name")}
+                          onBlur={() =>
+                            trackFieldFilled("brochure", "full_name", full_name)
+                          }
+                          placeholder="Enter your full name"
+                          className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="brochure-phoneNumber"
+                          className="block text-sm text-white/80 mb-2"
+                        >
+                          Phone Number (WhatsApp)
+                        </label>
+                        <input
+                          id="brochure-phoneNumber"
+                          type="tel"
+                          required
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          onFocus={() =>
+                            trackFieldFocus("brochure", "phoneNumber")
+                          }
+                          onBlur={() =>
+                            trackFieldFilled(
+                              "brochure",
+                              "phoneNumber",
+                              phoneNumber,
+                            )
+                          }
+                          placeholder="+234 801 234 5678"
+                          className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        />
+                        {phoneError && (
+                          <p className="mt-2 text-sm text-red-500">
+                            Please enter a valid Nigerian phone number.
+                          </p>
+                        )}
+                      </div>
+
                       <div>
                         <label
                           htmlFor="brochure-email"
@@ -171,35 +253,32 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           onFocus={() => trackFieldFocus("brochure", "email")}
-                          onBlur={() => trackFieldFilled("brochure", "email", email)}
+                          onBlur={() =>
+                            trackFieldFilled("brochure", "email", email)
+                          }
                           placeholder="you@company.com"
                           className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         />
                       </div>
-                      
-                      <div>
-                        <label
-                          htmlFor="brochure-phoneNumber"
-                          className="block text-sm text-white/80 mb-2"
-                        >
-                          Phone Number
-                        </label>
+
+                      <div className="flex items-start gap-3">
                         <input
-                          id="brochure-phoneNumber"
-                          type="tel"
+                          id="consent"
+                          type="checkbox"
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
                           required
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          onFocus={() => trackFieldFocus("brochure", "phoneNumber")}
-                          onBlur={() => trackFieldFilled("brochure", "phoneNumber", phoneNumber)}
-                          placeholder="+234 801 234 5678"
-                          className="w-full rounded-full px-5 py-3 text-sm text-[#191A15] placeholder:text-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                          className="mt-1 h-4 w-4 rounded border-white/30"
                         />
-                        {phoneError && (
-                          <p className="mt-2 text-sm text-red-500">
-                            Please enter a valid Nigerian phone number.
-                          </p>
-                        )}
+
+                        <label
+                          htmlFor="consent"
+                          className="text-sm text-white/80 leading-relaxed"
+                        >
+                          I agree to receive the Remsana Academy brochure and
+                          occasional updates about programs, scholarships, and
+                          events.
+                        </label>
                       </div>
 
                       <motion.button
@@ -255,7 +334,12 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 260,
+                        damping: 20,
+                        delay: 0.1,
+                      }}
                       className="w-16 h-16 rounded-full bg-green-500/15 border border-green-500/30 flex items-center justify-center mx-auto mb-5"
                     >
                       <svg
@@ -272,9 +356,12 @@ const BrochureModal = ({ isOpen, onClose }: BrochureModalProps) => {
                       </svg>
                     </motion.div>
 
-                    <h3 className="text-2xl text-white font-medium mb-2">Brochure on its way!</h3>
+                    <h3 className="text-2xl text-white font-medium mb-2">
+                      Brochure on its way!
+                    </h3>
                     <p className="text-gray-300 text-sm mb-8 leading-relaxed">
-                      Check your inbox — the Remsana Academy program brochure has been sent to your email.
+                      Check your inbox, the Remsana Academy program brochure
+                      has been sent to your email.
                     </p>
 
                     <motion.button
