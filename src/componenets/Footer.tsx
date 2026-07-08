@@ -2,6 +2,7 @@ import { useState, type FC } from "react";
 import axios from "axios";
 import ResultModal from "./ResultModal";
 import { trackEvent, trackFieldFocus, trackFieldFilled } from "../analytics";
+import { trackMetaLead } from "./metapixel";
 
 const Footer: FC = () => {
   const [formData, setFormData] = useState({
@@ -90,12 +91,13 @@ const Footer: FC = () => {
       await axios.post(endpoint, payload, {
         headers: { "Content-Type": "application/json" },
       });
-
+      trackEvent("application_form_success", { source: "footer" });
+      trackMetaLead();
       setResponseMessage(
         "Your application has been received successfully.\n\nPlease wait while we redirect you to schedule your strategy session with the Dean of Academics.",
       );
       setStatus("success");
-      trackEvent("application_form_success", { source: "footer" });
+
       setIsResultModalOpen(true);
       setTimeout(() => {
         redirectToBooking();

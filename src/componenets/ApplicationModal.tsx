@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import { trackEvent, trackFieldFocus, trackFieldFilled } from "../analytics";
+import { trackMetaLead } from "./metapixel";
 
 interface ApplicationModalProps {
   isOpen: boolean;
@@ -79,6 +80,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
         headers: { "Content-Type": "application/json" },
       });
       trackEvent("application_form_success", { source: "modal" });
+      trackMetaLead();
 
       setResponseMessage(
         "Your application has been received successfully.\n\nPlease wait while we redirect you to schedule your strategy session with the Dean of Academics.",
