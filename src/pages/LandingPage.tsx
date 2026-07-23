@@ -11,6 +11,7 @@ import NoExcute from "../componenets/NoExcute";
 import Footer from "../componenets/Footer";
 import BrochureModal from "../componenets/BrochureModal";
 import ApplicationModal from "../componenets/ApplicationModal";
+import WebinarModal from "../componenets/WebinarModal";
 import { trackEvent } from "../analytics";
 
 const LandingPage = () => {
@@ -33,6 +34,7 @@ const LandingPage = () => {
         isOpen={isApplicationModalOpen}
         onClose={() => setIsApplicationModalOpen(false)}
       />
+      <WebinarModal />
       <HeroSection
         onOpenBrochureModal={() => setIsBrochureModalOpen(true)}
         onOpenApplicationModal={handleOpenApplicationModal}
